@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Review {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  email       String   @db.VarChar(255)
+  rating      Int      @db.TinyInt
+  comment     String   @db.Text
+  approved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("reviews")
+}
+
+model Contact {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  phone       String   @db.VarChar(50)
+  email       String   @db.VarChar(255)
+  postalCode  String   @db.VarChar(10)
+  createdAt   DateTime @default(now())
+
+  @@map("contacts")
+}
+
+model Admin {
+  id          Int      @id @default(autoincrement())
+  username    String   @unique @db.VarChar(100)
+  email       String   @unique @db.VarChar(255)
+  password    String   @db.VarChar(255)
+  name        String   @db.VarChar(255)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  blogPosts   BlogPost[]
+
+  @@map("admins")
+}
+
+model BlogPost {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(500)
+  slug        String   @unique @db.VarChar(500)
+  excerpt     String   @db.Text
+  content     String   @db.LongText
+  image       String?  @db.VarChar(500)
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  category    String   @db.VarChar(100)
+  tags        String?  @db.Text
+  metaTitle   String?  @db.VarChar(500)
+  metaDescription String? @db.Text
+  readTime    Int      @default(5)
+  views       Int      @default(0)
+  authorId    Int
+  author      Admin    @relation(fields: [authorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("blog_posts")
+}
