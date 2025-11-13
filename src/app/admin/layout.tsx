@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { 
   LayoutDashboard, 
@@ -22,10 +22,16 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [adminInfo, setAdminInfo] = useState<any>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
+    // No verificar autenticación en la página de login
+    if (pathname === '/admin/login') {
+      setIsLoading(false);
+      return;
+    }
     checkAuth();
-  }, []);
+  }, [pathname]);
 
   const checkAuth = async () => {
     try {
@@ -71,6 +77,11 @@ export default function AdminLayout({
       icon: Mail,
     },
   ];
+
+  // Para la página de login, solo renderizar children sin autenticación
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
 
   if (isLoading) {
     return (
