@@ -19,6 +19,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export default function AdminLoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const router = useRouter();
 
   const {
@@ -36,10 +37,12 @@ export default function AdminLoginPage() {
         const response = await fetch("/api/admin/auth");
         if (response.ok) {
           router.push("/admin");
+          return;
         }
       } catch (error) {
-        // No está autenticado, continuar en login
+        console.log("No autenticado - mostrar login");
       }
+      setIsCheckingAuth(false);
     };
     checkAuth();
   }, [router]);
@@ -73,6 +76,15 @@ export default function AdminLoginPage() {
       setIsSubmitting(false);
     }
   };
+
+  // Mostrar loading mientras verifica autenticación
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4">
