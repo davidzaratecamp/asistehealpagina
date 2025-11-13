@@ -34,7 +34,9 @@ export default function AdminLoginPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/admin/auth");
+        const response = await fetch("/api/admin/auth", {
+          credentials: 'include'
+        });
         if (response.ok) {
           router.push("/admin");
           return;
@@ -57,6 +59,7 @@ export default function AdminLoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(data),
       });
 

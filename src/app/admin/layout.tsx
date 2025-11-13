@@ -35,7 +35,9 @@ export default function AdminLayout({
 
   const checkAuth = async () => {
     try {
-      const response = await fetch("/api/admin/auth");
+      const response = await fetch("/api/admin/auth", {
+        credentials: 'include'
+      });
       if (response.ok) {
         const data = await response.json();
         setIsAuthenticated(true);
@@ -53,7 +55,10 @@ export default function AdminLayout({
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/admin/auth", { method: "DELETE" });
+      await fetch("/api/admin/auth", { 
+        method: "DELETE",
+        credentials: 'include'
+      });
       router.push("/admin/login");
     } catch (error) {
       console.error("Error logging out:", error);
