@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     // Establecer el token como una cookie HTTP-only
     response.cookies.set('admin_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, // Temporal para HTTP en desarrollo/staging
       sameSite: 'lax',
       maxAge: 86400, // 24 horas
     });
